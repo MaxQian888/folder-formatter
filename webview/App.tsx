@@ -1,143 +1,179 @@
-import { MessageSquare, Settings, Zap } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Code2, FolderTree, GitBranch, History, Play, ScrollText, Settings as SettingsIcon, Wand2 } from 'lucide-react';
 
+import { DryRunPanel } from '@/components/format-files/DryRunPanel';
+import { HistoryTab } from '@/components/format-files/HistoryTab';
+import { LogsTab } from '@/components/format-files/LogsTab';
+import { RunStatusBar } from '@/components/format-files/RunStatusBar';
+import { SettingsTab } from '@/components/format-files/SettingsTab';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { useVscodeApi } from '@/hooks/useVscodeApi';
-import { useVscodeMessage } from '@/hooks/useVscodeMessage';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useFormatFilesState } from '@/hooks/useFormatFilesState';
+import { I18nProvider, useT } from '@/i18n/I18nProvider';
 
 import './index.css';
 
-interface PersistedState {
-  state: string;
-}
-
-function App() {
-  const api = useVscodeApi<PersistedState>();
-  const [message, setMessage] = useState('');
-  const [state, setState] = useState('');
-  const [lastFromExtension, setLastFromExtension] = useState('(awaiting ready handshake)');
-
-  useVscodeMessage('hello', (msg) => {
-    setLastFromExtension(msg.data);
-  });
-
-  // Signal readiness AFTER the message listener is registered (the
-  // useVscodeMessage useEffect above runs before this one in commit order),
-  // so the extension's hello reply cannot race past us.
-  useEffect(() => {
-    api.postMessage({ type: 'webview/ready' });
-  }, [api]);
-
-  const onSetState = () => {
-    api.setState({ state });
-  };
-  const onGetState = () => {
-    setState(api.getState()?.state ?? '');
-  };
-  const onPostMessage = () => {
-    api.postMessage({
-      type: 'hello',
-      data: message || 'Empty',
-    });
-  };
+function AppContent() {
+  const {
+    ready,
+    version,
+    locale,
+    config,
+    history,
+    logs,
+    run,
+    pendingDryRun,
+    updateSetting,
+    updateGitScope,
+    runWorkspace,
+    runFromGlob,
+    runGitChanged,
+    confirmDryRun,
+    clearHistory,
+    openOutputChannel,
+    clearLogs,
+  } = useFormatFilesState();
 
   return (
-    <main className="flex min-h-screen flex-col gap-6 p-6">
-      <div className="flex items-center gap-3">
-        <Zap className="size-8 text-primary" />
-        <div>
-          <h1 className="text-2xl font-bold">VSCode Extension Starter</h1>
-          <p className="text-sm text-muted-foreground">React + shadcn/ui + Tailwind CSS</p>
+    <I18nProvider locale={locale}>
+      <AppShell
+        ready={ready}
+        version={version}
+        config={config}
+        history={history}
+        logs={logs}
+        run={run}
+        pendingDryRun={pendingDryRun}
+        updateSetting={updateSetting}
+        updateGitScope={updateGitScope}
+        runWorkspace={runWorkspace}
+        runFromGlob={runFromGlob}
+        runGitChanged={runGitChanged}
+        confirmDryRun={confirmDryRun}
+        clearHistory={clearHistory}
+        openOutputChannel={openOutputChannel}
+        clearLogs={clearLogs}
+      />
+    </I18nProvider>
+  );
+}
+
+type AppShellProps = Omit<ReturnType<typeof useFormatFilesState>, 'locale'>;
+
+function AppShell(props: AppShellProps) {
+  const t = useT();
+  const {
+    ready,
+    version,
+    config,
+    history,
+    logs,
+    run,
+    pendingDryRun,
+    updateSetting,
+    updateGitScope,
+    runWorkspace,
+    runFromGlob,
+    runGitChanged,
+    confirmDryRun,
+    clearHistory,
+    openOutputChannel,
+    clearLogs,
+  } = props;
+
+  return (
+    <main className="flex min-h-screen flex-col gap-4 p-6">
+      <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex items-center gap-3">
+          <Wand2 className="size-7 text-primary" />
+          <div>
+            <h1 className="text-xl font-bold">{t('app.title')}</h1>
+            <p className="text-xs text-muted-foreground">
+              {t('app.subtitle')}
+            </p>
+          </div>
+          <Badge variant="outline" className="ml-2 font-mono text-xs">
+            {`v${version}`}
+          </Badge>
+          {!ready && (
+            <Badge variant="secondary" className="ml-1 text-xs">{t('app.connecting')}</Badge>
+          )}
         </div>
-        <Badge className="ml-auto">v0.0.1</Badge>
-      </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={runWorkspace} disabled={run.isRunning}>
+            <Play className="mr-2 size-4" />
+            {t('app.runWorkspace')}
+          </Button>
+          <Button variant="secondary" onClick={runGitChanged} disabled={run.isRunning}>
+            <GitBranch className="mr-2 size-4" />
+            {t('app.runGitChanged')}
+          </Button>
+          <Button variant="secondary" onClick={runFromGlob} disabled={run.isRunning}>
+            <FolderTree className="mr-2 size-4" />
+            {t('app.runFromGlob')}
+          </Button>
+        </div>
+      </header>
 
       <Separator />
 
-      <p className="text-sm text-muted-foreground">
-        Last from extension:
-        {' '}
-        <span data-testid="extension-payload" className="font-mono">{lastFromExtension}</span>
-      </p>
+      {pendingDryRun && (
+        <DryRunPanel report={pendingDryRun} onConfirm={confirmDryRun} />
+      )}
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="size-5" />
-              Message
-            </CardTitle>
-            <CardDescription>Send a typed message to the VSCode extension</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="message">Message content</Label>
-              <Input
-                id="message"
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-                placeholder="Enter message..."
-              />
-            </div>
-            {message && (
-              <p className="text-sm text-muted-foreground">
-                Preview:
-                {' '}
-                {message}
-              </p>
-            )}
-          </CardContent>
-          <CardFooter>
-            <Button onClick={onPostMessage} className="w-full">
-              <MessageSquare className="mr-2 size-4" />
-              Send Message
-            </Button>
-          </CardFooter>
-        </Card>
+      <RunStatusBar run={run} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="size-5" />
-              State Management
-            </CardTitle>
-            <CardDescription>Persist state across webview sessions</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="state">State value</Label>
-              <Input
-                id="state"
-                value={state}
-                onChange={e => setState(e.target.value)}
-                placeholder="Enter state..."
-              />
-            </div>
-            {state && (
-              <p className="text-sm text-muted-foreground">
-                Current:
-                {' '}
-                {state}
-              </p>
+      <Tabs defaultValue="settings" className="flex-1">
+        <TabsList>
+          <TabsTrigger value="settings">
+            <SettingsIcon className="mr-1 size-4" />
+            {t('app.tab.settings')}
+          </TabsTrigger>
+          <TabsTrigger value="history">
+            <History className="mr-1 size-4" />
+            {t('app.tab.history')}
+            {history.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-[10px]">
+                {history.length}
+              </Badge>
             )}
-          </CardContent>
-          <CardFooter className="flex gap-2">
-            <Button onClick={onSetState} className="flex-1">
-              Save State
-            </Button>
-            <Button variant="secondary" onClick={onGetState} className="flex-1">
-              Load State
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+          </TabsTrigger>
+          <TabsTrigger value="logs">
+            <ScrollText className="mr-1 size-4" />
+            {t('app.tab.logs')}
+            {logs.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-[10px]">
+                {logs.length}
+              </Badge>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="settings" className="mt-4">
+          <SettingsTab config={config} onUpdate={updateSetting} onUpdateGitScope={updateGitScope} />
+        </TabsContent>
+        <TabsContent value="history" className="mt-4">
+          <HistoryTab history={history} onClear={clearHistory} />
+        </TabsContent>
+        <TabsContent value="logs" className="mt-4">
+          <LogsTab logs={logs} onClearLogs={clearLogs} onOpenOutputChannel={openOutputChannel} />
+        </TabsContent>
+      </Tabs>
+
+      <footer className="mt-auto flex items-center justify-between border-t pt-3 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <Code2 className="size-3" />
+          {t('app.footer.inspiredBy')}
+        </span>
+        <span>
+          {t('app.footer.outputChannel')}
+          {' '}
+          <strong>{t('app.footer.outputChannelName')}</strong>
+        </span>
+      </footer>
     </main>
   );
 }
 
-export default App;
+export default AppContent;

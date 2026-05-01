@@ -20,30 +20,37 @@ function buildCspMeta(webview: Webview, nonce: string, devServerUrl: string | un
     `style-src ${cspSource} 'unsafe-inline'`,
     dev
       ? `script-src 'nonce-${nonce}' ${devServerUrl} 'unsafe-eval'`
-      : `script-src 'nonce-${nonce}'`,
+      : `script-src 'nonce-${nonce}' 'unsafe-eval'`,
     dev
       ? `connect-src ${cspSource} ${devServerUrl} ws: wss:`
       : `connect-src ${cspSource}`,
+    // Dev mode: @tomjs/vite-plugin-vscode wraps the dev server in an iframe; allow it.
+    dev ? `frame-src ${devServerUrl}` : null,
     `font-src ${cspSource} data:`,
-  ].join('; ');
+  ].filter((d): d is string => d !== null).join('; ');
   return `<meta http-equiv="Content-Security-Policy" content="${csp}">`;
 }
 
-function injectCspAndNonce(html: string, cspMeta: string, nonce: string): string {
-  // 1. Insert CSP meta as the first child of <head>.
-  let out = html.replace(/<head>/i, `<head>${cspMeta}`);
-  // 2. Add nonce to every inline / external <script> tag that lacks one.
+function rewriteCspAndNonce(html: string, cspMeta: string, nonce: string): string {
+  // Strip any bundled CSP meta first — multiple CSP metas are intersected by
+  // the browser, and the bundled one carries a different nonce than ours.
+  let out = html.replace(/<meta\s+http-equiv=["']Content-Security-Policy["'][^>]*>/gi, '');
+  out = out.replace(/<head>/i, `<head>${cspMeta}`);
   out = out.replace(/<script(?![^>]*\snonce=)([^>]*)>/gi, `<script nonce="${nonce}"$1>`);
   return out;
 }
 
 export class WebviewHelper {
   static setupHtml(webview: Webview, context: ExtensionContext): string {
-    const nonce = generateNonce();
     const devServerUrl = process.env.VITE_DEV_SERVER_URL;
     const baseHtml = getWebviewHtml({ serverUrl: devServerUrl, webview, context });
+    // Reuse the nonce already attached by getWebviewHtml's bundled template
+    // so our CSP and the existing <script nonce="..."> tags agree. In dev
+    // mode the iframe template carries no nonce yet — fall back to a fresh one.
+    const existingNonce = baseHtml.match(/<script[^>]*\snonce=["']([^"']+)["']/i)?.[1];
+    const nonce = existingNonce ?? generateNonce();
     const cspMeta = buildCspMeta(webview, nonce, devServerUrl);
-    return injectCspAndNonce(baseHtml, cspMeta, nonce);
+    return rewriteCspAndNonce(baseHtml, cspMeta, nonce);
   }
 
   static setupHooks(webview: Webview, context: ExtensionContext, disposables: Disposable[]): void {

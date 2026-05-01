@@ -1,14 +1,26 @@
-import { register as registerShowHelloWorld } from './commands/showHelloWorld';
-import { logger } from './logger';
+import { register as registerShowPanel } from './commands/formatFilesShowPanel';
+import { registerStartCommands } from './commands/registerStartCommands';
+import { disposeRuntime, initRuntime } from './format-files/runtime';
+import { registerPanelStateListeners } from './views/messages';
 
 import type { ExtensionContext } from 'vscode';
 
 export function activate(context: ExtensionContext): void {
-  logger.info('activating extension');
-  registerShowHelloWorld(context);
-  context.subscriptions.push({ dispose: () => logger.dispose() });
+  const runtime = initRuntime(context);
+  runtime.logger.info('activate', 'Format Files extension activating');
+
+  registerStartCommands(context);
+  registerShowPanel(context);
+  registerPanelStateListeners(context);
+
+  context.subscriptions.push({
+    dispose: () => {
+      runtime.logger.info('deactivate', 'Format Files extension shutting down');
+      disposeRuntime();
+    },
+  });
 }
 
 export function deactivate(): void {
-  logger.info('deactivating extension');
+  // Subscriptions registered above handle teardown.
 }

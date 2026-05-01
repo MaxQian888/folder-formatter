@@ -43,7 +43,5 @@ ReactDOM.createRoot(root).render(
   </StrictMode>,
 );
 
-// Note: the `webview/ready` handshake is dispatched from inside <App/>'s
-// useEffect, AFTER `useVscodeMessage('hello', ...)` has registered its
-// window listener — otherwise the extension's hello reply could arrive
-// before the listener exists.
+// Note: the `webview/ready` handshake is dispatched from inside the
+// `useFormatFilesState` hook's effect, after its message listener is attached.

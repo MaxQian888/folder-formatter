@@ -1,0 +1,32 @@
+{
+  "extension.displayName": "Folder Formatter",
+  "extension.description": "在工作区、文件夹、glob 模式或仅 Git 变更范围内批量格式化文件。提供配置与日志面板、.gitignore 支持、Dry-run 预览以及逐文件结果报告。",
+
+  "command.category": "Format Files",
+  "command.start.workspace": "格式化文件：整个工作区",
+  "command.start.workspaceFolder": "格式化文件：此文件夹",
+  "command.start.fromGlob": "格式化文件：按 Glob",
+  "command.start.gitChanged": "格式化文件：Git 变更",
+  "command.showPanel": "显示面板",
+
+  "config.title": "Format Files",
+  "config.logLevel.description": "**Format Files** 输出通道的最低显示级别，低于此级别的消息会被抑制。",
+  "config.logLevel.debug": "用于调试本插件自身的详细追踪。",
+  "config.logLevel.info": "信息事件（运行开始/结束、文件数量）。",
+  "config.logLevel.warn": "可恢复的问题（单文件格式化失败）。",
+  "config.logLevel.error": "仅不可恢复的错误。",
+  "config.extensionsToInclude.description": "要包含的文件扩展名，逗号分隔（如 `ts,tsx,js,json`），可省略前导点。留空表示包含所选范围下的所有文件。",
+  "config.excludedFolders.description": "要排除的文件夹名（或工作区相对路径）。每个条目会被转为 glob `**/<name>/**`。",
+  "config.excludePattern.description": "要排除的 glob 模式，逗号分隔（如 `**/*.min.js,**/vendor/**`）。",
+  "config.inheritWorkspaceExcludedFiles.description": "将工作区 `files.exclude` 中启用的键合并到排除模式中。",
+  "config.runOrganizeImports.description": "在格式化每个文件之前运行 **Organize Imports**。",
+  "config.useGitIgnore.description": "跳过被工作区中任何 `.gitignore` 匹配的文件。",
+  "config.gitScope.includeStaged.description": "为 `true` 时，**格式化 Git 变更** 命令会处理已 `git add` 进入索引的文件。",
+  "config.gitScope.includeModified.description": "为 `true` 时，**格式化 Git 变更** 命令会处理已跟踪但有未暂存改动的文件。",
+  "config.gitScope.includeUntracked.description": "为 `true` 时，**格式化 Git 变更** 命令会处理 Git 尚未跟踪的新文件。",
+  "config.dryRunFirst.description": "为 `true` 时，每次运行先弹出确认面板，列出匹配的文件、扩展名分布与预估耗时，确认后才真正运行。",
+  "config.locale.description": "Format Files 面板中使用的语言。`auto` 会跟随 VSCode 的显示语言。（命令面板与设置 UI 始终跟随 VSCode。）",
+  "config.locale.auto": "自动（跟随 VSCode 显示语言）",
+  "config.locale.en": "English",
+  "config.locale.zh-CN": "简体中文"
+}

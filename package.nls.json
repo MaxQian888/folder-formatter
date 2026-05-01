@@ -1,0 +1,32 @@
+{
+  "extension.displayName": "Folder Formatter",
+  "extension.description": "Batch-format files in a workspace, folder, by glob pattern, or across just your Git changes. Includes a configuration & log webview panel, .gitignore support, dry-run preview, and per-file result reporting.",
+
+  "command.category": "Format Files",
+  "command.start.workspace": "Start Format Files: Workspace",
+  "command.start.workspaceFolder": "Start Format Files: This Folder",
+  "command.start.fromGlob": "Start Format Files: From Glob",
+  "command.start.gitChanged": "Start Format Files: Git Changes",
+  "command.showPanel": "Show Panel",
+
+  "config.title": "Format Files",
+  "config.logLevel.description": "Severity threshold for the **Format Files** output channel. Messages below this level are suppressed.",
+  "config.logLevel.debug": "Verbose tracing for debugging the extension itself.",
+  "config.logLevel.info": "Informational events (run start/end, file counts).",
+  "config.logLevel.warn": "Recoverable issues (a single file failed to format).",
+  "config.logLevel.error": "Unrecoverable errors only.",
+  "config.extensionsToInclude.description": "Comma-separated list of file extensions to include (e.g. `ts,tsx,js,json`). The leading dot is optional. Leave empty to include every file under the chosen scope.",
+  "config.excludedFolders.description": "Folder names (or workspace-relative paths) to exclude. Each entry is converted to the glob `**/<name>/**`.",
+  "config.excludePattern.description": "Comma-separated glob patterns to exclude (e.g. `**/*.min.js,**/vendor/**`).",
+  "config.inheritWorkspaceExcludedFiles.description": "Merge enabled keys from the workspace `files.exclude` setting into the exclude pattern.",
+  "config.runOrganizeImports.description": "Run **Organize Imports** on each file before formatting.",
+  "config.useGitIgnore.description": "Skip files matched by any `.gitignore` in the workspace tree.",
+  "config.gitScope.includeStaged.description": "When `true`, the **Run on Git changes** command processes files in the index (staged via `git add`).",
+  "config.gitScope.includeModified.description": "When `true`, the **Run on Git changes** command processes tracked files with unstaged modifications.",
+  "config.gitScope.includeUntracked.description": "When `true`, the **Run on Git changes** command processes new files Git has not yet tracked.",
+  "config.dryRunFirst.description": "When `true`, every Run shows a confirmation panel listing the matched files, extension breakdown, and ETA before any file is touched.",
+  "config.locale.description": "Language used inside the Format Files panel. `auto` follows VSCode's display language. (Command palette and settings UI always follow VSCode.)",
+  "config.locale.auto": "Auto (follow VSCode's display language)",
+  "config.locale.en": "English",
+  "config.locale.zh-CN": "简体中文 (Simplified Chinese)"
+}

@@ -1,31 +1,38 @@
 {
   "publisher": "your-publisher",
-  "name": "vscode-extension-quick-starter",
-  "displayName": "VSCode Extension Quick Starter",
+  "name": "folder-formatter",
+  "displayName": "%extension.displayName%",
   "type": "commonjs",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.26.2",
-  "description": "VSCode extension starter with React + shadcn/ui",
+  "description": "%extension.description%",
   "license": "MIT",
-  "homepage": "https://github.com/AstroAir/vscode-extension-quick-starter#readme",
+  "homepage": "https://github.com/AstroAir/folder-formatter#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AstroAir/vscode-extension-quick-starter.git"
+    "url": "https://github.com/AstroAir/folder-formatter.git"
   },
   "bugs": {
-    "url": "https://github.com/AstroAir/vscode-extension-quick-starter/issues"
+    "url": "https://github.com/AstroAir/folder-formatter/issues"
   },
   "keywords": [
-    "react",
-    "shadcn",
-    "tailwind",
-    "webview",
-    "starter",
-    "template"
+    "format",
+    "formatter",
+    "format-files",
+    "batch-format",
+    "prettier",
+    "eslint",
+    "organize-imports",
+    "workspace",
+    "folder",
+    "glob",
+    "git",
+    "dry-run",
+    "i18n"
   ],
   "categories": [
-    "Other"
+    "Formatters"
   ],
   "main": "dist/extension/index.js",
   "icon": "assets/icon.png",
@@ -41,22 +48,184 @@
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": "limited",
-      "description": "The webview reads no workspace files; safe to enable in untrusted workspaces."
+      "description": "Format Files reads workspace files and invokes registered formatters. Limited support: behavior is unchanged in untrusted workspaces, but formatters that require trust may refuse to run."
     },
-    "virtualWorkspaces": true
+    "virtualWorkspaces": false
   },
   "engines": {
     "node": ">=20",
     "vscode": "^1.116.0"
   },
+  "extensionDependencies": [
+    "vscode.git"
+  ],
   "activationEvents": [],
   "contributes": {
     "commands": [
       {
-        "command": "hello-world.showHelloWorld",
-        "title": "Hello World: Show"
+        "command": "formatFiles.start.workspace",
+        "title": "%command.start.workspace%",
+        "category": "%command.category%",
+        "icon": {
+          "light": "assets/panel-icon-light.svg",
+          "dark": "assets/panel-icon-dark.svg"
+        }
+      },
+      {
+        "command": "formatFiles.start.workspaceFolder",
+        "title": "%command.start.workspaceFolder%",
+        "category": "%command.category%",
+        "enablement": "explorerViewletVisible && filesExplorerFocus && explorerResourceIsFolder",
+        "icon": {
+          "light": "assets/panel-icon-light.svg",
+          "dark": "assets/panel-icon-dark.svg"
+        }
+      },
+      {
+        "command": "formatFiles.start.fromGlob",
+        "title": "%command.start.fromGlob%",
+        "category": "%command.category%",
+        "icon": {
+          "light": "assets/panel-icon-light.svg",
+          "dark": "assets/panel-icon-dark.svg"
+        }
+      },
+      {
+        "command": "formatFiles.start.gitChanged",
+        "title": "%command.start.gitChanged%",
+        "category": "%command.category%",
+        "icon": {
+          "light": "assets/panel-icon-light.svg",
+          "dark": "assets/panel-icon-dark.svg"
+        }
+      },
+      {
+        "command": "formatFiles.showPanel",
+        "title": "%command.showPanel%",
+        "category": "%command.category%",
+        "icon": {
+          "light": "assets/panel-icon-light.svg",
+          "dark": "assets/panel-icon-dark.svg"
+        }
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "explorerResourceIsFolder",
+          "command": "formatFiles.start.workspaceFolder",
+          "group": "navigation@-1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "%config.title%",
+      "properties": {
+        "folderFormatter.logLevel": {
+          "type": "string",
+          "default": "debug",
+          "enum": [
+            "debug",
+            "info",
+            "warn",
+            "error"
+          ],
+          "enumDescriptions": [
+            "%config.logLevel.debug%",
+            "%config.logLevel.info%",
+            "%config.logLevel.warn%",
+            "%config.logLevel.error%"
+          ],
+          "scope": "resource",
+          "markdownDescription": "%config.logLevel.description%"
+        },
+        "folderFormatter.extensionsToInclude": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "markdownDescription": "%config.extensionsToInclude.description%"
+        },
+        "folderFormatter.excludedFolders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "node_modules",
+            ".vscode",
+            ".git",
+            "dist",
+            ".chrome"
+          ],
+          "scope": "resource",
+          "markdownDescription": "%config.excludedFolders.description%"
+        },
+        "folderFormatter.excludePattern": {
+          "type": "string",
+          "default": "",
+          "scope": "resource",
+          "markdownDescription": "%config.excludePattern.description%"
+        },
+        "folderFormatter.inheritWorkspaceExcludedFiles": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%config.inheritWorkspaceExcludedFiles.description%"
+        },
+        "folderFormatter.runOrganizeImports": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%config.runOrganizeImports.description%"
+        },
+        "folderFormatter.useGitIgnore": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%config.useGitIgnore.description%"
+        },
+        "folderFormatter.gitScope.includeStaged": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%config.gitScope.includeStaged.description%"
+        },
+        "folderFormatter.gitScope.includeModified": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%config.gitScope.includeModified.description%"
+        },
+        "folderFormatter.gitScope.includeUntracked": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "%config.gitScope.includeUntracked.description%"
+        },
+        "folderFormatter.dryRunFirst": {
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "markdownDescription": "%config.dryRunFirst.description%"
+        },
+        "folderFormatter.locale": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "en",
+            "zh-CN"
+          ],
+          "enumDescriptions": [
+            "%config.locale.auto%",
+            "%config.locale.en%",
+            "%config.locale.zh-CN%"
+          ],
+          "scope": "resource",
+          "markdownDescription": "%config.locale.description%"
+        }
+      }
+    }
   },
   "scripts": {
     "dev": "vite",
@@ -98,6 +267,7 @@
     "@radix-ui/react-slot": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "ignore": "^5.3.2",
     "lucide-react": "^0.468.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.5",
