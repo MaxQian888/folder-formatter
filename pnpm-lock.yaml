@@ -77,7 +77,7 @@ importers:
         version: 2.2.0
       '@tomjs/vite-plugin-vscode':
         specifier: ^6.2.0
-        version: 6.2.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/vscode@1.116.0)(publint@0.3.16)(synckit@0.11.12)(typescript@5.9.3)(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.8.3))(vue-tsc@3.2.1(typescript@5.9.3))
+        version: 6.2.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/vscode@1.118.0)(publint@0.3.16)(synckit@0.11.12)(typescript@5.9.3)(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.8.3))(vue-tsc@3.2.1(typescript@5.9.3))
       '@types/mocha':
         specifier: ^10.0.10
         version: 10.0.10
@@ -91,8 +91,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
       '@types/vscode':
-        specifier: ^1.116.0
-        version: 1.116.0
+        specifier: ^1.118.0
+        version: 1.118.0
       '@types/vscode-webview':
         specifier: ^1.57.5
         version: 1.57.5
@@ -2373,8 +2373,8 @@ packages:
   '@types/vscode-webview@1.57.5':
     resolution: {integrity: sha512-iBAUYNYkz+uk1kdsq05fEcoh8gJmwT3lqqFPN7MGyjQ3HVloViMdo7ZJ8DFIP8WOK74PjOEilosqAyxV2iUFUw==}
 
-  '@types/vscode@1.116.0':
-    resolution: {integrity: sha512-sYHp4MO6BqJ2PD7Hjt0hlIS3tMaYsVPJrd0RUjDJ8HtOYnyJIEej0bLSccM8rE77WrC+Xox/kdBwEFDO8MsxNA==}
+  '@types/vscode@1.118.0':
+    resolution: {integrity: sha512-Ah6eTlqDcwIMELEVwQMO++rJAFBRz/oLluLD/vWdYrH1KuI9kfpaM+7pg0OvvascgcJy+ghLCERAYouM4QbzGw==}
 
   '@typescript-eslint/eslint-plugin@8.59.0':
     resolution: {integrity: sha512-HyAZtpdkgZwpq8Sz3FSUvCR4c+ScbuWa9AksK2Jweub7w4M3yTz4O11AqVJzLYjy/B9ZWPyc81I+mOdJU/bDQw==}
@@ -7874,10 +7874,10 @@ snapshots:
 
   '@tomjs/tsconfig@2.2.0': {}
 
-  '@tomjs/vite-plugin-vscode@6.2.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/vscode@1.116.0)(publint@0.3.16)(synckit@0.11.12)(typescript@5.9.3)(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.8.3))(vue-tsc@3.2.1(typescript@5.9.3))':
+  '@tomjs/vite-plugin-vscode@6.2.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/vscode@1.118.0)(publint@0.3.16)(synckit@0.11.12)(typescript@5.9.3)(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1)(lightningcss@1.32.0)(tsx@4.21.0)(yaml@2.8.3))(vue-tsc@3.2.1(typescript@5.9.3))':
     dependencies:
       '@tomjs/node': 2.2.3
-      '@types/vscode': 1.116.0
+      '@types/vscode': 1.118.0
       execa: 9.6.1
       lodash.merge: 4.6.2
       node-html-parser: 7.1.0
@@ -7953,7 +7953,7 @@ snapshots:
 
   '@types/vscode-webview@1.57.5': {}
 
-  '@types/vscode@1.116.0': {}
+  '@types/vscode@1.118.0': {}
 
   '@typescript-eslint/eslint-plugin@8.59.0(@typescript-eslint/parser@8.59.0(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.4(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:
