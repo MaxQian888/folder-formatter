@@ -288,7 +288,7 @@
     "@tomjs/tsconfig": "^2.2.0",
     "@tomjs/vite-plugin-vscode": "^6.2.0",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20.19.39",
+    "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/vscode": "^1.116.0",
