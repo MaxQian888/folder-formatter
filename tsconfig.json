@@ -1,7 +1,6 @@
 {
   "extends": "@tomjs/tsconfig/react.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./webview/*"],
       "@shared/*": ["./shared/*"]
