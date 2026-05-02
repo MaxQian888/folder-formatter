@@ -1,14 +1,12 @@
 {
-  "extension.displayName": "Folder Formatter",
+  "extension.displayName": "Folder Formatter Next",
   "extension.description": "在工作区、文件夹、glob 模式或仅 Git 变更范围内批量格式化文件。提供配置与日志面板、.gitignore 支持、Dry-run 预览以及逐文件结果报告。",
-
   "command.category": "Format Files",
   "command.start.workspace": "格式化文件：整个工作区",
   "command.start.workspaceFolder": "格式化文件：此文件夹",
   "command.start.fromGlob": "格式化文件：按 Glob",
   "command.start.gitChanged": "格式化文件：Git 变更",
   "command.showPanel": "显示面板",
-
   "config.title": "Format Files",
   "config.logLevel.description": "**Format Files** 输出通道的最低显示级别，低于此级别的消息会被抑制。",
   "config.logLevel.debug": "用于调试本插件自身的详细追踪。",

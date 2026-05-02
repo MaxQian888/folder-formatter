@@ -1,14 +1,12 @@
 {
-  "extension.displayName": "Folder Formatter",
+  "extension.displayName": "Folder Formatter Next",
   "extension.description": "Batch-format files in a workspace, folder, by glob pattern, or across just your Git changes. Includes a configuration & log webview panel, .gitignore support, dry-run preview, and per-file result reporting.",
-
   "command.category": "Format Files",
   "command.start.workspace": "Start Format Files: Workspace",
   "command.start.workspaceFolder": "Start Format Files: This Folder",
   "command.start.fromGlob": "Start Format Files: From Glob",
   "command.start.gitChanged": "Start Format Files: Git Changes",
   "command.showPanel": "Show Panel",
-
   "config.title": "Format Files",
   "config.logLevel.description": "Severity threshold for the **Format Files** output channel. Messages below this level are suppressed.",
   "config.logLevel.debug": "Verbose tracing for debugging the extension itself.",
