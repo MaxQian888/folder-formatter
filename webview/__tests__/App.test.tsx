@@ -116,7 +116,7 @@ describe('app shell', () => {
 describe('logsTab component', () => {
   it('renders an empty-state message when there are no logs', () => {
     render(
-      <LogsTab logs={[]} onClearLogs={() => {}} onOpenOutputChannel={() => {}} />,
+      <LogsTab logs={[]} onClearLogs={() => { }} onOpenOutputChannel={() => { }} />,
     );
     expect(screen.getByText(/no log entries yet/i)).toBeInTheDocument();
   });
@@ -125,8 +125,8 @@ describe('logsTab component', () => {
     render(
       <LogsTab
         logs={[{ level: 'info', source: 'test', message: 'hello-from-extension', timestamp: Date.now() }]}
-        onClearLogs={() => {}}
-        onOpenOutputChannel={() => {}}
+        onClearLogs={() => { }}
+        onOpenOutputChannel={() => { }}
       />,
     );
     expect(screen.getByText('hello-from-extension')).toBeInTheDocument();
@@ -135,7 +135,7 @@ describe('logsTab component', () => {
 
 describe('historyTab component', () => {
   it('renders the empty state when there is no history', () => {
-    render(<HistoryTab history={[]} onClear={() => {}} />);
+    render(<HistoryTab history={[]} onClear={() => { }} />);
     expect(screen.getByText(/no runs yet/i)).toBeInTheDocument();
   });
 
@@ -154,7 +154,7 @@ describe('historyTab component', () => {
             workspaceFolder: 'demo',
           },
         ]}
-        onClear={() => {}}
+        onClear={() => { }}
       />,
     );
     expect(screen.getByText('12 / 12')).toBeInTheDocument();
@@ -181,7 +181,7 @@ describe('historyTab component', () => {
             ],
           },
         ]}
-        onClear={() => {}}
+        onClear={() => { }}
       />,
     );
 

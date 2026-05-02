@@ -227,7 +227,7 @@ export async function runFormatFiles(
     try {
       getRuntime().pendingDryRunDecisions.delete(runId);
     }
-    catch {}
+    catch { }
 
     const entry: RunHistoryEntry = {
       id: runId,

@@ -26,7 +26,7 @@ function renderPanel(onConfirm: (proceed: boolean) => void) {
 
 describe('dryRunPanel', () => {
   it('renders the totals, mode, and first-files list', () => {
-    renderPanel(() => {});
+    renderPanel(() => { });
     expect(screen.getByText(/dry-run preview/i)).toBeInTheDocument();
     // Total count
     expect(screen.getByText('5')).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe('dryRunPanel', () => {
   });
 
   it('surfaces unknown-formatter extensions', () => {
-    renderPanel(() => {});
+    renderPanel(() => { });
     expect(screen.getByText(/no known formatter/i)).toBeInTheDocument();
   });
 

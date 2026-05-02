@@ -23,7 +23,7 @@ describe('useVscodeApi', () => {
     const g = globalThis as { acquireVsCodeApi?: unknown };
     const original = g.acquireVsCodeApi;
     delete g.acquireVsCodeApi;
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => { });
     try {
       const { getVscodeApi } = await import('@/hooks/useVscodeApi');
       const api = getVscodeApi();

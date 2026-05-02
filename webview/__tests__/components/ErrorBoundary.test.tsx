@@ -11,7 +11,7 @@ function Boom(): never {
 
 describe('errorBoundary', () => {
   it('renders fallback UI on render error', () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
     render(
       <ErrorBoundary>
@@ -23,7 +23,7 @@ describe('errorBoundary', () => {
   });
 
   it('reports the error to the extension via postMessage', () => {
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
     render(
       <ErrorBoundary>
