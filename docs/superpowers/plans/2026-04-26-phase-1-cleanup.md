@@ -500,7 +500,8 @@ Expected: all green.
 pnpm dev
 ```
 
-Open http://localhost:5173 in a browser. Verify:
+Open <http://localhost:5173> in a browser. Verify:
+
 - Page loads
 - "VSCode Extension Starter" heading visible
 - No console errors / warnings
@@ -535,6 +536,7 @@ git tag phase-1-complete
 ## Phase 1 done
 
 Outputs at this point:
+
 - 16 shadcn components in `webview/components/ui/`
 - A trimmed runtime dep set tied to actual usage
 - `*.tsbuildinfo` ignored project-wide

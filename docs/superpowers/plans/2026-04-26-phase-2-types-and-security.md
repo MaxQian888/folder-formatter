@@ -1385,6 +1385,7 @@ pnpm dev
 ```
 
 Press F5 in VSCode to launch the Extension Development Host with the dev profile. Run `Hello World: Show` from the command palette. Verify:
+
 - Webview opens
 - "Last from extension: Hello World!" appears (handshake worked)
 - Sending a message shows a VSCode information notification
@@ -1444,6 +1445,7 @@ git tag phase-2-complete
 ## Phase 2 done
 
 Outputs:
+
 - Single source of truth for messages in `shared/messages.ts`
 - Zero `any` across the boundary
 - CSP+nonce (dev-mode permissive, prod-mode strict)

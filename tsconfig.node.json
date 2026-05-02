@@ -3,8 +3,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["./shared/*"]
+      "@shared/*": [
+        "./shared/*"
+      ]
     }
   },
-  "include": ["extension", "vite.config.ts", "shared"]
+  "include": [
+    "extension",
+    "vite.config.ts",
+    "shared"
+  ]
 }

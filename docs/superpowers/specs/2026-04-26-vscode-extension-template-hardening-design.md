@@ -215,7 +215,7 @@ const csp = [
 ].join('; ');
 ```
 
-`<meta http-equiv="Content-Security-Policy" content="...">` is injected into `<head>`; every `<script>` carries the same `nonce`. If `@tomjs/vite-plugin-vscode`'s virtual `getWebviewHtml` does not expose a nonce hook, fall back to a deterministic `html.replace(/<script /g, `<script nonce="${nonce}" `)` patch in `helper.ts`.
+`<meta http-equiv="Content-Security-Policy" content="...">` is injected into `<head>`; every `<script>` carries the same `nonce`. If `@tomjs/vite-plugin-vscode`'s virtual `getWebviewHtml` does not expose a nonce hook, fall back to a deterministic `html.replace(/<script /g,`<script nonce="${nonce}" `)` patch in `helper.ts`.
 
 `createWebviewPanel` is configured with:
 
@@ -426,7 +426,7 @@ Phase 4's documentation skeleton may begin in parallel with Phase 2, but final d
 
 | Risk | Likelihood | Mitigation |
 |---|---|---|
-| `@tomjs/vite-plugin-vscode` `getWebviewHtml` does not expose a nonce hook | Medium | Read plugin source first; fallback is a deterministic `html.replace(/<script /g, `<script nonce="${nonce}" `)` patch in `helper.ts`. |
+| `@tomjs/vite-plugin-vscode` `getWebviewHtml` does not expose a nonce hook | Medium | Read plugin source first; fallback is a deterministic `html.replace(/<script /g,`<script nonce="${nonce}" `)` patch in `helper.ts`. |
 | Tailwind v4 inline styles incompatible with strict `style-src` | Medium | Accept `'unsafe-inline'` for `style-src`; document the constraint in `architecture.md`. |
 | `pnpm package` (`vsce`) fails on Windows / macOS in the matrix | Low | `continue-on-error: ${{ matrix.os != 'ubuntu-latest' }}`; PR pass condition still hinges on Ubuntu. |
 | Changesets disrupts current manual release flow | Low | `docs/publishing.md` includes a changesets quickstart; `pnpm package` script kept as escape hatch. |

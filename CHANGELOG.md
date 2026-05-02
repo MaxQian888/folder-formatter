@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Typed extension/webview message contract (`shared/messages.ts`)
 - `OutputChannel` logger
 - CSP + nonce in webview HTML; `localResourceRoots` constrained to `dist/`
@@ -24,11 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - changesets-driven release workflow
 
 ### Changed
+
 - shadcn component set trimmed to 16 commonly-used components
 - pre-commit hook is fast (`lint-staged`); pre-push runs `typecheck && test`
 - `release.yml` skips Marketplace step gracefully when `VSCE_PAT` is unset
 
 ### Removed
+
 - 34 unused shadcn components and their heavy deps (`recharts`, `embla-carousel-react`, `vaul`, `react-day-picker`, `cmdk`, `input-otp`, `next-themes`, `react-hook-form`, `@hookform/resolvers`, `@base-ui/react`, `zod`, `react-resizable-panels`, `date-fns`)
 - `tsconfig.node.tsbuildinfo` from version control
 - Tautology asserts in extension-host tests

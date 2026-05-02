@@ -1215,6 +1215,7 @@ code --user-data-dir /tmp/phase4-vsix
 ```
 
 In the new VSCode window:
+
 - Run `Smoke Test: Show` from the Command Palette.
 - Verify the webview opens and the handshake displays "Hello World!".
 - Verify the message round-trip works.
@@ -1287,6 +1288,7 @@ git tag phase-4-complete
 ## Phase 4 done
 
 Outputs:
+
 - `pnpm init:template` adopts the template in one step (interactive or scripted)
 - Marketplace metadata complete; `private: true` retained as safety brake
 - 128×128 icon placeholder; SECURITY.md; CODEOWNERS

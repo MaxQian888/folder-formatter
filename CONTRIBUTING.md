@@ -13,10 +13,13 @@ Thank you for your interest in contributing to VSCode Extension Quick Starter!
 
 1. Fork and clone the repository
 2. Install dependencies:
+
    ```bash
    pnpm install
    ```
+
 3. Start development:
+
    ```bash
    pnpm dev
    ```

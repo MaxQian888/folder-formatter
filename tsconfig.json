@@ -2,9 +2,16 @@
   "extends": "@tomjs/tsconfig/react.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./webview/*"],
-      "@shared/*": ["./shared/*"]
+      "@/*": [
+        "./webview/*"
+      ],
+      "@shared/*": [
+        "./shared/*"
+      ]
     }
   },
-  "include": ["webview", "shared"]
+  "include": [
+    "webview",
+    "shared"
+  ]
 }

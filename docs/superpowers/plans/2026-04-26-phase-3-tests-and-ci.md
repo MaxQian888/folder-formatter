@@ -576,6 +576,7 @@ git push origin main
 ```
 
 In the GitHub Actions tab, observe:
+
 - `lint`, `typecheck` parallel ≤ 1 min each
 - `test` matrix (node 20 + 22) parallel ≈ 2 min each
 - `build` matrix (3 OS) parallel; ubuntu hard, win/mac soft
@@ -595,6 +596,7 @@ git tag phase-3-complete
 ## Phase 3 done
 
 Outputs:
+
 - Real activation/command/dispatch assertions in extension-host tests
 - Vitest coverage thresholds enforced for hooks/utils/lib
 - Playwright runs the same suite against `dev` and `prod-preview`
