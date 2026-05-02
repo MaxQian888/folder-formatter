@@ -1,9 +1,9 @@
 {
-  "publisher": "your-publisher",
-  "name": "folder-formatter",
+  "publisher": "MaxQian",
+  "name": "folder-formatter-next",
   "displayName": "%extension.displayName%",
   "type": "commonjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "packageManager": "pnpm@10.26.2",
   "description": "%extension.description%",

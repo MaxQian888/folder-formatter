@@ -1,4 +1,4 @@
-import { commands, ProgressLocation, ViewColumn, window, workspace } from 'vscode';
+import { CodeActionKind, commands, ProgressLocation, Range, window, workspace, WorkspaceEdit } from 'vscode';
 
 import { OperationAborted } from './errors';
 import { ht } from './host-i18n';
@@ -6,7 +6,7 @@ import { ht } from './host-i18n';
 import type { FormatFilesConfig } from './config';
 import type { FormatFilesLogger } from './logger';
 import type { FileResultEntry } from '@shared/messages';
-import type { CancellationToken, Progress, TextDocument, Uri } from 'vscode';
+import type { CancellationToken, CodeAction, Progress, TextDocument, TextEdit, Uri } from 'vscode';
 
 export interface FormatLoopProgress {
   message: string;
@@ -50,19 +50,79 @@ interface SafeExecuteOutcome {
   error?: Error;
 }
 
-async function safeExecute(
-  commandId: string,
+function toError(err: unknown): Error {
+  return err instanceof Error ? err : new Error(String(err));
+}
+
+async function applyOrganizeImports(
+  doc: TextDocument,
   logger: FormatFilesLogger,
-  source: string,
-  filePath: string,
 ): Promise<SafeExecuteOutcome> {
   try {
-    await commands.executeCommand(commandId);
+    const fullRange = new Range(0, 0, doc.lineCount, 0);
+    const actions = await commands.executeCommand<CodeAction[] | undefined>(
+      'vscode.executeCodeActionProvider',
+      doc.uri,
+      fullRange,
+      CodeActionKind.SourceOrganizeImports.value,
+    );
+    for (const action of actions ?? []) {
+      if (action.edit)
+        await workspace.applyEdit(action.edit);
+      if (action.command) {
+        await commands.executeCommand(
+          action.command.command,
+          ...(action.command.arguments ?? []),
+        );
+      }
+    }
     return { ok: true };
   }
   catch (err) {
-    logger.warn(source, `'${commandId}' failed for ${filePath}`, err);
-    return { ok: false, error: err instanceof Error ? err : new Error(String(err)) };
+    logger.warn('applyOrganizeImports', `failed for ${doc.uri.fsPath}`, err);
+    return { ok: false, error: toError(err) };
+  }
+}
+
+async function applyFormatProvider(
+  doc: TextDocument,
+  logger: FormatFilesLogger,
+): Promise<SafeExecuteOutcome> {
+  try {
+    const edits = await commands.executeCommand<TextEdit[] | undefined>(
+      'vscode.executeFormatDocumentProvider',
+      doc.uri,
+    );
+    if (edits && edits.length > 0) {
+      const we = new WorkspaceEdit();
+      we.set(doc.uri, edits);
+      const applied = await workspace.applyEdit(we);
+      if (!applied)
+        return { ok: false, error: new Error('workspace.applyEdit returned false') };
+    }
+    return { ok: true };
+  }
+  catch (err) {
+    logger.warn('applyFormatProvider', `failed for ${doc.uri.fsPath}`, err);
+    return { ok: false, error: toError(err) };
+  }
+}
+
+async function saveDocument(
+  doc: TextDocument,
+  logger: FormatFilesLogger,
+): Promise<SafeExecuteOutcome> {
+  if (!doc.isDirty)
+    return { ok: true };
+  try {
+    const saved = await doc.save();
+    if (!saved)
+      return { ok: false, error: new Error('TextDocument.save() returned false') };
+    return { ok: true };
+  }
+  catch (err) {
+    logger.warn('saveDocument', `failed for ${doc.uri.fsPath}`, err);
+    return { ok: false, error: toError(err) };
   }
 }
 
@@ -71,9 +131,14 @@ async function safeExecute(
  * cancellation token. Per-file outcome is captured and surfaced both via the
  * `onFileDone` callback and the aggregated `fileResults` array on the result.
  *
+ * Files are formatted via the document's formatting/code-action providers and
+ * saved through `TextDocument.save()`. Editors are never shown, which avoids
+ * the visible open/close flicker and the "unsaved changes" prompt that an
+ * editor-based flow would trigger if focus drifted between files.
+ *
  * Status classification:
  *   - `skipped`   — `openTextDocument` failed (binary, permission, etc.)
- *   - `failed`    — format / save command threw, OR `showTextDocument` failed
+ *   - `failed`    — provider/apply/save threw or reported failure
  *   - `unchanged` — file ran clean but content matches the pre-format snapshot
  *   - `ok`        — file ran clean and content changed
  */
@@ -130,44 +195,25 @@ export async function runFormatLoop(opts: FormatLoopOptions): Promise<FormatLoop
           continue;
         }
 
-        try {
-          await window.showTextDocument(doc, { preview: false, viewColumn: ViewColumn.One });
-        }
-        catch (err) {
-          logger.warn('runFormatLoop', `failed to show ${uri.fsPath}`, err);
-          failed++;
-          pushResult({
-            uri: uri.toString(),
-            relativePath: relative,
-            status: 'failed',
-            durationMs: Date.now() - fileStart,
-            errorMessage: err instanceof Error ? err.message : String(err),
-          });
-          continue;
-        }
-
         const before = doc.getText();
         const failures: string[] = [];
 
         if (config.runOrganizeImports) {
-          const r = await safeExecute('editor.action.organizeImports', logger, 'organizeImports', uri.fsPath);
+          const r = await applyOrganizeImports(doc, logger);
           if (!r.ok && r.error)
             failures.push(`organizeImports: ${r.error.message}`);
         }
 
-        const fmt = await safeExecute('editor.action.formatDocument', logger, 'formatDocument', uri.fsPath);
+        const fmt = await applyFormatProvider(doc, logger);
         if (!fmt.ok && fmt.error)
           failures.push(`formatDocument: ${fmt.error.message}`);
 
-        const sav = await safeExecute('workbench.action.files.save', logger, 'save', uri.fsPath);
+        const sav = await saveDocument(doc, logger);
         if (!sav.ok && sav.error)
           failures.push(`save: ${sav.error.message}`);
 
-        // Re-read post-save content. `doc.getText()` reflects on-disk content
-        // because save() flushes the editor buffer.
+        // After save the in-memory document reflects on-disk content.
         const after = doc.getText();
-
-        await safeExecute('workbench.action.closeActiveEditor', logger, 'closeEditor', uri.fsPath);
 
         const durationMs = Date.now() - fileStart;
         if (failures.length > 0) {
