@@ -18,6 +18,7 @@ __tests__/
 .vscode/
 .github/
 .changeset/
+.claude/
 node_modules/
 
 # Config files
